@@ -4,6 +4,17 @@ class DashboardController < ApplicationController
 
     if current_user.merchant?
       @merchant = current_user
+
+
+
+
+
+
+
+
+
+      # --- STATS ----
+
       @total_items_sold = @merchant.total_items_sold
       @total_items_pcnt = 0
       if @total_items_sold && @merchant.total_inventory > 0
