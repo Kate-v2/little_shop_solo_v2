@@ -56,7 +56,8 @@ RSpec.describe 'Merchant dashboard has To-Do list' do
     it 'links to item show page' do
       card = page.find("#missing-#{@todo_item1.id}")
 
-      save_and_open_page
+      skip("I'm not sure if we item#show for a merchant user")
+      # save_and_open_page
 
       card.click_link("#{@todo_item1.name}")
       # item GET    /items/:id(.:format) items#show

@@ -1,8 +1,9 @@
 <h1>Merchant Dashboard</h1>
 
-<h2>To Do List</h2>
-<%= render partial: 'merchants/components/missing_images' %>
-
+<% if current_user.merchant? %>
+  <h2>To Do List</h2>
+  <%= render partial: 'merchants/components/missing_images' %>
+<% end %>
 
 <p><%= link_to "Edit Profile Data", current_admin? ? edit_user_path(@merchant.id) : profile_edit_path %></p>
 <p><%= link_to 'My Items for Sale', current_admin? ? merchant_items_path(@merchant) : dashboard_items_path %>
