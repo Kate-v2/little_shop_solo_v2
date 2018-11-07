@@ -1,78 +1,13 @@
 <h1>Merchant Dashboard</h1>
 
+<h2>To Do List</h2>
+<%= render partial: 'merchants/components/missing_images' %>
+
+
 <p><%= link_to "Edit Profile Data", current_admin? ? edit_user_path(@merchant.id) : profile_edit_path %></p>
 <p><%= link_to 'My Items for Sale', current_admin? ? merchant_items_path(@merchant) : dashboard_items_path %>
 
-<div id="stats">
-  <div id="inv-stats">
-    <h3>Inventory Stats</h3>
-    <p>Total Items Sold: <%= number_with_delimiter(@total_items_sold) %></p>
-    <p>Represents <%= number_to_percentage(@total_items_pcnt, precision: 1) %> of Inventory</p>
-  </div>
-  <div id="shipping-stats">
-    <h3>Shipping Stats</h3>
-    
-    <div id='stats-top-states'>
-    <p>Top 3 States:</p>
-      <% if @top_3_shipping_states %>
-      <ul>
-      <% @top_3_shipping_states.each do |state| %>
-      <li><%= state %></li>
-      <% end %>
-      </ul>
-      <% else %>
-      <p>(none yet)</p>
-      <% end %>
-    </div>
-    
-    <div id='stats-top-cities'>
-    <p>Top 3 Cities:</p>
-      <% if @top_3_shipping_cities %>
-      <ul>
-      <% @top_3_shipping_cities.each do |city| %>
-      <li><%= city %></li>
-      <% end %>
-      </ul>
-      <% else %>
-      (none yet)
-      <% end %>
-    </div>
-  </div>
-
-  <div id='stats-most-active-user'>
-  <p>Most Active Buying User:
-    <% if @most_active_buyer %>
-    <%= @most_active_buyer.name %>, <%= @most_active_buyer.order_count %> orders
-    <% else %>
-    (none yet)
-    <% end %>
-  </p>
-  </div>
-
-  <div id='stats-biggest-order'>
-    <p>Biggest Order:
-    <% if @biggest_order %>
-    Order #<%= @biggest_order.id %>, worth <%= number_to_currency(@biggest_order.total) %><br/>
-    It had <%= number_with_delimiter(@biggest_order.item_count) %> items of yours in the order.
-    <% else %>
-    (none yet)
-    <% end %>
-    </p>
-  </div>
-
-  <div id='stats-top-buyers'>
-  <p>Top Buyers:</p>
-    <% if @top_buyers %>
-    <ul>
-    <% @top_buyers.each do |buyer| %>
-    <li><%= buyer.name %>, <%= number_to_currency(buyer.total_spent) %></li>
-    <% end %>
-    </ul>
-    <% else %>
-    (none yet)
-    <% end %>
-  </div>
-</div>
+<%= render partial: 'merchants/components/stats' %>
 
 <% if @merchant && @merchant.merchant_orders.count > 0 %>
   <% if current_admin? %>
@@ -88,5 +23,5 @@
   <% else %>
   <%= button_to "Enable", user_path(@merchant), method: :patch, params: { toggle: :enable } %>
   <% end %>
-  <%= button_to "Upgrade to Merchant", user_path(@merchant), method: :patch, params: { toggle: :role } %> 
+  <%= button_to "Upgrade to Merchant", user_path(@merchant), method: :patch, params: { toggle: :role } %>
 <% end %>
