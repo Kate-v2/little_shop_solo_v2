@@ -2,6 +2,7 @@ require "rails_helper"
 require "feature_helper"
 
 RSpec.describe 'Merchant dashboard has To-Do list' do
+  include FeatureHelper
 
   before(:each) do
     @merch = create(:user, role: 1)
@@ -14,15 +15,20 @@ RSpec.describe 'Merchant dashboard has To-Do list' do
     @todo_item2 = create(:item, user: @merch, image: nil)
     @todo_item3 = create(:item, user: @merch)
 
-    user = create(:user, role: 0)
-    @order1 = create(:order, user: user)
+    @user = create(:user, role: 0)
+    @order1 = create(:order, user: @user)
     @oitem1_1 = create(:order_item, order: @order1, item: @item1, quantity: 1)
     @oitem1_2 = create(:order_item, order: @order1, item: @item2, quantity: 2)
 
 
-    @order2 = create(:order, user: user)
-    @oitem2_1 = reate(:order_item, order: @order2, item: @item1, quantity: 1)
-    @oitem2_2 = reate(:order_item, order: @order2, item: @item2, quantity: 2)
+    @order2 = create(:order, user: @user)
+    @oitem2_1 = create(:order_item, order: @order2, item: @item1, quantity: 1)
+    @oitem2_2 = create(:order_item, order: @order2, item: @item2, quantity: 2)
+
+    @order3 = create(:order, user: @user)
+    @oitem3_1 = create(:order_item, order: @order3, item: @item1, quantity: 1)
+    @oitem3_2 = create(:order_item, order: @order3, item: @item3, quantity: 2, fulfilled: true)
+
 
     login(@merch)
     visit dashboard_path
@@ -51,6 +57,35 @@ RSpec.describe 'Merchant dashboard has To-Do list' do
       # item GET    /items/:id(.:format) items#show
       path = item_path(id: @todo_item1)
       expect(page).to have_current_path(path)
+    end
+  end
+
+  describe 'pending order items' do
+
+    it 'displays order items yet to be fulfilled' do
+      section = page.find('.pending-items')
+      expect(section).to     have_content(@item1.name)
+      expect(section).to     have_content(@item2.name)
+      expect(section).to_not have_content(@item3.name)
+      found = seciton.all('.pending-item').count
+      count = (OrderItem.count - 1)
+      expect(found).to eq(count)
+    end
+
+    it 'links to fulfill order item' do
+      card = page.find("#pending-#{@oitem1_1.id}")
+      card.click_link("Fufill")
+    end
+
+    it "indicates if there's not enough stock to fulfill the item" do
+      item = create(:item, user: @merch, quantity: 1)
+      order = create(:order, user: @user)
+      oitem = create(:order_item, order: order, item: item, quantity: 600)
+
+      visit dashboard_path
+      expect(page).to have_content(item.name)
+      card = page.find("#pending-#{item.id}")
+      expect(card).to have_content("Not enough inventory")
     end
 
   end
