@@ -20,7 +20,6 @@ RSpec.describe 'Merchant dashboard has To-Do list' do
     @oitem1_1 = create(:order_item, order: @order1, item: @item1, quantity: 1)
     @oitem1_2 = create(:order_item, order: @order1, item: @item2, quantity: 2)
 
-
     @order2 = create(:order, user: @user)
     @oitem2_1 = create(:order_item, order: @order2, item: @item1, quantity: 1)
     @oitem2_2 = create(:order_item, order: @order2, item: @item2, quantity: 2)
@@ -28,6 +27,9 @@ RSpec.describe 'Merchant dashboard has To-Do list' do
     @order3 = create(:order, user: @user)
     @oitem3_1 = create(:order_item, order: @order3, item: @item1, quantity: 1)
     @oitem3_2 = create(:order_item, order: @order3, item: @item3, quantity: 2, fulfilled: true)
+
+    @pending_count = (OrderItem.count - 1)
+    @pending_revenue = OrderItem.where(fulfilled: false).sum('quantity * price')
 
 
     login(@merch)
@@ -68,8 +70,7 @@ RSpec.describe 'Merchant dashboard has To-Do list' do
       expect(section).to     have_content(@item2.name)
       expect(section).to_not have_content(@item3.name)
       found = seciton.all('.pending-item').count
-      count = (OrderItem.count - 1)
-      expect(found).to eq(count)
+      expect(found).to eq(@pending_count)
     end
 
     it 'links to fulfill order item' do
@@ -86,6 +87,16 @@ RSpec.describe 'Merchant dashboard has To-Do list' do
       expect(page).to have_content(item.name)
       card = page.find("#pending-#{item.id}")
       expect(card).to have_content("Not enough inventory")
+    end
+
+    it 'has count of pending order items' do
+      seciton = page.find('.pending-items-stats')
+      expect(section).to have_content("Pending Count: #{@pending_count}")
+    end
+
+    it 'has total revenue impact of pending items' do
+      seciton = page.find('.pending-items-stats')
+      expect(section).to have_content("Pending Revenue: #{@pending_revenue}")
     end
 
   end
