@@ -3,6 +3,7 @@
 <% if current_user.merchant? %>
   <h2>To Do List</h2>
   <%= render partial: 'merchants/components/missing_images' %>
+  <%= render partial: 'merchants/components/pending_order_items' %>
 <% end %>
 
 <p><%= link_to "Edit Profile Data", current_admin? ? edit_user_path(@merchant.id) : profile_edit_path %></p>

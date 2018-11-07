@@ -4,7 +4,10 @@ class DashboardController < ApplicationController
 
     if current_user.merchant?
       @merchant = current_user
-      @missing_images = @merchant.items.where(image: nil)
+      @missing_images = @merchant.missing_images
+      @pending_order_items = @merchant.unfulfilled
+      @pending_count = @merchant.pending_count
+      @pending_revenue = @merchant.pending_revenue
       # binding.pry
 
       @total_items_sold = @merchant.total_items_sold
