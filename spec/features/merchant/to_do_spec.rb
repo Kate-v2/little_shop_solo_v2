@@ -94,18 +94,12 @@ RSpec.describe 'Merchant dashboard has To-Do list' do
     end
 
     it 'has count of pending order items' do
-
-      skip
-
-      seciton = page.find('.pending-items-stats')
+      section = page.find('.pending-items-stats')
       expect(section).to have_content("Pending Count: #{@pending_count}")
     end
 
     it 'has total revenue impact of pending items' do
-
-      skip
-
-      seciton = page.find('.pending-items-stats')
+      section = page.find('.pending-items-stats')
       expect(section).to have_content("Pending Revenue: #{@pending_revenue}")
     end
 

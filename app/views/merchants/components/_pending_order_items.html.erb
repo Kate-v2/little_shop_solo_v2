@@ -2,6 +2,11 @@
 <div class='pending-items'>
   <h3>Orders to fulfill</h3>
 
+  <div class='pending-items-stats'>
+    <h4>Pending Count: <%= @pending_count%></h4>
+    <h4>Pending Revenue: <%= @pending_revenue%></h4>
+  </div>
+
   <% @pending_order_items.each do |oitem| %>
 
     <span class='pending-item' id="pending-<%= oitem.id %>">

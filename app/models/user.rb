@@ -3,12 +3,35 @@ class User < ApplicationRecord
 
   has_many :orders
   has_many :items
-  has_many :order_items, through: :items
 
   validates_presence_of :name, :address, :city, :state, :zip
   validates :email, presence: true, uniqueness: true
 
   enum role: %w(user merchant admin)
+
+
+  # ---- SOLO -----------------
+  has_many :order_items, through: :items
+
+  def missing_images
+    self.items.where(image: nil)
+  end
+
+  def unfulfilled
+    self.order_items.where(fulfilled: false)
+  end
+
+  def pending_count
+    self.unfulfilled.count
+  end
+
+  def pending_revenue
+    self.unfulfilled.sum('quantity * order_items.price')
+  end
+
+  # ---------------------------
+
+
 
   def merchant_orders(status=nil)
     if status.nil?
