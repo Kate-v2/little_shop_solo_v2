@@ -4,16 +4,8 @@ class DashboardController < ApplicationController
 
     if current_user.merchant?
       @merchant = current_user
-
-
-
-
-
-
-
-
-
-      # --- STATS ----
+      @missing_images = @merchant.items.where(image: nil)
+      # binding.pry
 
       @total_items_sold = @merchant.total_items_sold
       @total_items_pcnt = 0
