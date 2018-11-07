@@ -69,36 +69,27 @@ RSpec.describe 'Merchant dashboard has To-Do list' do
   describe 'pending order items' do
 
     it 'displays order items yet to be fulfilled' do
-
-      skip
-
       section = page.find('.pending-items')
       expect(section).to     have_content(@item1.name)
       expect(section).to     have_content(@item2.name)
       expect(section).to_not have_content(@item3.name)
-      found = seciton.all('.pending-item').count
+      found = section.all('.pending-item').count
       expect(found).to eq(@pending_count)
     end
 
     it 'links to fulfill order item' do
-
-      skip
-
       card = page.find("#pending-#{@oitem1_1.id}")
-      card.click_link("Fufill")
+      card.click_button("Fulfill")
     end
 
     it "indicates if there's not enough stock to fulfill the item" do
-
-      skip
-
       item = create(:item, user: @merch, inventory: 1)
       order = create(:order, user: @user)
       oitem = create(:order_item, order: order, item: item, quantity: 600)
 
       visit dashboard_path
       expect(page).to have_content(item.name)
-      card = page.find("#pending-#{item.id}")
+      card = page.find("#pending-#{oitem.id}")
       expect(card).to have_content("Not enough inventory")
     end
 

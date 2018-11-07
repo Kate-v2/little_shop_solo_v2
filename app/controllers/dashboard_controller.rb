@@ -5,6 +5,7 @@ class DashboardController < ApplicationController
     if current_user.merchant?
       @merchant = current_user
       @missing_images = @merchant.items.where(image: nil)
+      @pending_order_items = @merchant.order_items.where(fulfilled: false)
       # binding.pry
 
       @total_items_sold = @merchant.total_items_sold
